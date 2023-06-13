@@ -85,7 +85,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ui1"
+name = "viper"
 version = "0.1.0"
 dependencies = [
  "ncurses",
