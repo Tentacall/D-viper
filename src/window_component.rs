@@ -6,6 +6,7 @@ pub enum Action{
     QUIT,
     RESUME,
     RESTART,
+    START
 }
 
 pub struct Choice
@@ -154,6 +155,7 @@ impl Component {
             Action::QUIT => { self.del(); return Err(Action::QUIT) },
             Action::RESTART => { self.del(); return Err(Action::RESTART) },
             Action::RESUME => { self.del(); return Err(Action::RESUME) },
+            Action::START => { self.del(); return Err(Action::START )}
         }
     }
 

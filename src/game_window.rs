@@ -74,8 +74,34 @@ impl GameWindow {
         }
     }
 
-    pub fn start_menu(&mut self, _height: i32, _width: i32){
-        
+    pub fn start_menu(&mut self, height: i32, width: i32) -> Action {
+        let mut component: Component =
+            Component::new(height, width, self.window_height, self.window_width);
+
+        component.set_title("VIPER".to_string());
+        let choice1: Choice = Choice::new("Start".to_string(), Action::START);
+        let choice2: Choice = Choice::new("Quit".to_string(), Action::QUIT);
+        component.add_choice(choice1);
+        component.add_choice(choice2);
+
+        loop {
+            component.clear();
+            component.set_border();
+            component.display();
+            component.refresh();
+            napms(100);
+            match getch() {
+                ERR => {}
+                27  => {
+                    component.del();
+                    return Action::QUIT
+                }
+                x => match component.handle_input(x) {
+                    Err(n) => return n,
+                    _ => {}
+                },
+            }
+        }
     }
 
     pub fn get_name(&mut self, height : i32, width: i32) -> String{

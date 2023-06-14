@@ -6,6 +6,10 @@ use viper::window_component::Action;
 fn main() {
     let mut window = GameWindow::new();
     'new_game: loop {
+        match window.start_menu(6, 30 ){
+            Action::QUIT => break 'new_game,
+            _ => {}
+        }
         let name: String = window.get_name(6, 30);
         let mut game: Game = Game::new(
             name,
@@ -38,7 +42,8 @@ fn main() {
             match window.pause_menu(6, 30, msg, is_gameover) {
                 Action::QUIT => break 'new_game,
                 Action::RESTART => break 'curr_game,
-                Action::RESUME => {}
+                Action::RESUME => {},
+                _ => {}
             }
         }
     }
