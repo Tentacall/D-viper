@@ -16,7 +16,7 @@ fn main() {
         refresh();
 
         match game.snake.propagate() {
-            Ok(()) => {}
+            Ok(()) => {},
             Err(_) => {
                 break;
             }
@@ -29,7 +29,7 @@ fn main() {
         }
     }
     let msg: String = format!("Score : {}", game.score);
-    window.new_menu(6, 30, msg);
+    window.pause_menu(6, 30, msg);
     window.exit();
     println!("Game Over\nScore : {}", game.score);
 }

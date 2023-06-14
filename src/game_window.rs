@@ -1,7 +1,7 @@
 extern crate ncurses;
+use crate::window_component::*;
 use ncurses::*;
 
-#[derive(Debug)]
 pub struct GameWindow {
     pub window_width: i32,
     pub window_height: i32,
@@ -26,6 +26,7 @@ impl GameWindow {
 
         // defining color
         init_pair(1, COLOR_RED, COLOR_BLACK);
+        init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 
         GameWindow {
             window_width: max_x,
@@ -37,17 +38,32 @@ impl GameWindow {
         endwin();
     }
 
-    pub fn new_menu(&mut self, height: i32, width: i32, title: String) -> () {
-        let posy = (self.window_height - height) / 2;
-        let posx = (self.window_width - width) / 2;
-        let win: *mut i8 = newwin(height, width, posy, posx);
-        box_(win, 0, 0);
+    pub fn pause_menu(&mut self, height: i32, width: i32, title: String) -> () {
+        let mut component: Component =
+            Component::new(height, width, self.window_height, self.window_width);
+        component.set_title(title);
 
-        let p = (width - (title.len() as i32)) / 2;
-        mvwprintw(win, 1, p, title.as_str());
-        wrefresh(win);
-        napms(2000);
-        getch();
-        delwin(win);
+        let choice1: Choice = Choice::new("Resume".to_string(), Box::new(demo));
+        let choice2: Choice = Choice::new("Restart".to_string(), Box::new(demo));
+        let choice3: Choice = Choice::new("Quit".to_string(), Box::new(demo));
+        component.add_choice(choice1);
+        component.add_choice(choice2);
+        component.add_choice(choice3);
+
+        loop {
+            component.clear();
+            component.set_border();
+            component.display();
+            component.refresh();
+            napms(100);
+            match getch() {
+                ERR => {}
+                27 => break,
+                x => component.handle_input(x),
+            }
+        }
+        component.del();
     }
 }
+
+fn demo() -> () {}

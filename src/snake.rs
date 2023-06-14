@@ -17,12 +17,9 @@ pub struct SnakeBodyPart {
     part: Part,
 }
 
-#[allow(unused)]
 pub struct Snake {
     pub snake: VecDeque<SnakeBodyPart>,
-    pos: Position,
     pub direction: Direction,
-    length: i32,
     texture: (String, String, String),
     snake_hash: HashSet<i32>,
 }
@@ -56,9 +53,7 @@ impl Snake {
         let snake: VecDeque<SnakeBodyPart> = VecDeque::from([p1, p2, p3]);
         Snake {
             snake: snake,
-            pos: position,
             direction: Direction::RIGHT,
-            length: 1,
             texture: texture,
             snake_hash: hash_set,
         }
