@@ -1,1 +1,27 @@
 /target
+# Ignore generated package files
+package/pkg/
+package/src/
+package/viper
+*/*.tar.zst
+
+# Ignore logs or debug files
+/log/
+*.log
+*.debug
+
+# Ignore editor and IDE files
+.vscode/
+.idea/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore user-specific files
+*.swp
+*.swo
+
+# Ignore personal configurations or secrets
+/config.toml
+/secret.key
