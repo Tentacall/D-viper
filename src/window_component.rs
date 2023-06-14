@@ -89,13 +89,16 @@ impl Component {
 
         //displaying inputs
         if self.input_len > 0 {
+            
+            let line = format!("+{}+", "-".repeat(self.width as usize - 4) );
+            mvwprintw(self.win, self.cur_y, 1, line.as_str());
             self.cur_y += 1;
-            // for i in 0..self.input_len {
-            //     let p = (self.width - (self.inputs.len() as i32)) / 2;
-            //     mvwprintw(self.win, self.cur_y, p, self.inputs.as_str());
-            // }
             let p = (self.width - (self.inputs.len() as i32)) / 2;
+            mvwprintw(self.win, self.cur_y, 1, "|");
             mvwprintw(self.win, self.cur_y, p, self.inputs.as_str());
+            mvwprintw(self.win, self.cur_y, self.width - 2, "|");
+            self.cur_y += 1;
+            mvwprintw(self.win, self.cur_y, 1, line.as_str());
         }
 
 

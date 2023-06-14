@@ -1,0 +1,14 @@
+pkgname=dviper
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="A Snake game for terminal."
+arch=('x86_64')
+license=('MIT')
+depends=()  # Specify any dependencies here
+source=("viper")
+sha512sums=(
+    "1b268ea2c589f6292d31a917929a7285a1ef710be5ed8b17858cf6995cead1700210b242c179aec6471a0ab015e0aae981037f99aaf2abd2eab020fa4af9bb6b"
+)
+package() {
+    install -Dm755 viper "${pkgdir}/usr/bin/dviper"
+}
