@@ -123,7 +123,8 @@ impl Component {
     fn option_handler(&mut self, action : Action ) -> Result<(), Action> {
         match action {
             Action::QUIT => { self.del(); return Err(Action::QUIT) },
-            _ => Ok(())
+            Action::RESTART => { self.del(); return Err(Action::RESTART) },
+            Action::RESUME => { self.del(); return Err(Action::RESUME) },
         }
     }
 
