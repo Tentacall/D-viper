@@ -1,11 +1,17 @@
 use ncurses::{wattroff, wattron, box_, delwin, mvwprintw, newwin, wrefresh, A_BOLD, COLOR_PAIR, KEY_ENTER, wclear };
 use crate::utils::Position;
 
+#[derive(Clone, Copy)]
+pub enum Action{
+    QUIT,
+    RESUME,
+    RESTART,
+}
 
 pub struct Choice
 {
     text: String,
-    handler: Box<dyn FnMut() -> ()>,
+    handler: Action,
 }
 
 
@@ -22,15 +28,11 @@ pub struct Component {
 }
 
 impl Choice{
-    pub fn new(text: String, handler: Box<dyn FnMut() -> ()>) -> Self {
+    pub fn new(text: String, handler: Action) -> Self {
         Choice {
             text: text,
             handler: handler,
         }
-    }
-
-    fn call_handler(&mut self) -> () {
-        (self.handler)()
     }
 }
 
@@ -94,7 +96,7 @@ impl Component {
         }
     }
 
-    pub fn handle_input(&mut self, x: i32) -> () {
+    pub fn handle_input(&mut self, x: i32) -> Result<(), Action> {
         match x {
             115 | 258 => {
                 self.option_selected = ( self.option_selected + 1 ) % self.option_len;
@@ -107,14 +109,25 @@ impl Component {
                     self.option_selected = ( self.option_selected - 1 ) % self.option_len;
                 }
             },
-            KEY_ENTER => {
-                self.options[self.option_selected].call_handler();
+            KEY_ENTER | 10 => {
+                match self.option_handler(self.options[self.option_selected].handler){
+                    Err(n) => return Err(n),
+                    _ => {}
+                };
             },
             _ => {}
         }
+        Ok(())
     }
 
-    pub fn del(self) {
+    fn option_handler(&mut self, action : Action ) -> Result<(), Action> {
+        match action {
+            Action::QUIT => { self.del(); return Err(Action::QUIT) },
+            _ => Ok(())
+        }
+    }
+
+    pub fn del(&self) {
         delwin(self.win);
     }
 
