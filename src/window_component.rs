@@ -23,6 +23,8 @@ pub struct Component {
     options: Vec<Choice>,
     option_len: usize,
     option_selected: usize,
+    inputs: String,
+    input_len: usize,
     title :String,
     title_pos: Position
 }
@@ -50,6 +52,8 @@ impl Component {
             option_selected: 0,
             title : String::new(),
             title_pos : Position::new(0, 0),
+            input_len: 0,
+            inputs : String::new()
         }
     }
 
@@ -76,23 +80,38 @@ impl Component {
     }
 
     pub fn display(&mut self) {
+        // displaying the title
         wattron(self.win,COLOR_PAIR(1) | A_BOLD());
         mvwprintw(self.win, self.title_pos.posy, self.title_pos.posx, self.title.as_str());
         wattroff(self.win,COLOR_PAIR(1) | A_BOLD());
         self.cur_y = 2;
 
-        if self.option_len == 0 { return }
-        for i in 0..self.option_len {
-            let p = (self.width - (self.options[i].text.len() as i32)) / 2;
-            if i == self.option_selected {
-                wattron(self.win, A_BOLD());
-                mvwprintw(self.win, self.cur_y, p, self.options[i].text.as_str());
-                wattroff(self.win, A_BOLD());
-            }
-            else{
-                mvwprintw(self.win, self.cur_y, p, self.options[i].text.as_str());
-            }
+        //displaying inputs
+        if self.input_len > 0 {
             self.cur_y += 1;
+            // for i in 0..self.input_len {
+            //     let p = (self.width - (self.inputs.len() as i32)) / 2;
+            //     mvwprintw(self.win, self.cur_y, p, self.inputs.as_str());
+            // }
+            let p = (self.width - (self.inputs.len() as i32)) / 2;
+            mvwprintw(self.win, self.cur_y, p, self.inputs.as_str());
+        }
+
+
+        // displaying the options
+        if self.option_len > 0 { 
+            for i in 0..self.option_len {
+                let p = (self.width - (self.options[i].text.len() as i32)) / 2;
+                if i == self.option_selected {
+                    wattron(self.win, A_BOLD());
+                    mvwprintw(self.win, self.cur_y, p, self.options[i].text.as_str());
+                    wattroff(self.win, A_BOLD());
+                }
+                else{
+                    mvwprintw(self.win, self.cur_y, p, self.options[i].text.as_str());
+                }
+                self.cur_y += 1;
+            }
         }
     }
 
@@ -118,6 +137,16 @@ impl Component {
             _ => {}
         }
         Ok(())
+    }
+
+    pub fn set_inputbox(&mut self) -> i32 {
+        self.input_len += 1;
+        self.input_len as i32
+    }
+
+    pub fn update_input(&mut self, input: String, index: i32) -> () {
+        let _ = index - 1;
+        self.inputs = input;
     }
 
     fn option_handler(&mut self, action : Action ) -> Result<(), Action> {

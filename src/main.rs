@@ -1,17 +1,19 @@
 use ncurses::*;
 use viper::game::Game;
-use viper::game_window::*;
+use viper::game_window::{*};
 use viper::window_component::Action;
 
 fn main() {
     let mut window = GameWindow::new();
     'new_game: loop {
+        let name: String = window.get_name(6, 30);
         let mut game: Game = Game::new(
-            "Rupak".to_string(),
+            name,
             window.window_width,
             window.window_height,
         );
         'curr_game: loop {
+            let mut is_gameover : bool = false;
             'game: loop {
                 clear();
                 game.display();
@@ -21,6 +23,7 @@ fn main() {
                 match game.snake.propagate() {
                     Ok(()) => {}
                     Err(_) => {
+                        is_gameover = true;
                         break 'game;
                     }
                 };
@@ -32,7 +35,7 @@ fn main() {
                 }
             }
             let msg: String = format!("Score : {}", game.score);
-            match window.pause_menu(6, 30, msg) {
+            match window.pause_menu(6, 30, msg, is_gameover) {
                 Action::QUIT => break 'new_game,
                 Action::RESTART => break 'curr_game,
                 Action::RESUME => {}
