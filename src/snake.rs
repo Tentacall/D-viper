@@ -1,8 +1,8 @@
+use ncurses::{attroff, attron, mvprintw, A_BOLD};
 use std::collections::HashSet;
 use std::collections::VecDeque;
-use ncurses::{mvprintw, attroff, attron, A_BOLD };
 
-use crate::utils::{Position, Direction};
+use crate::utils::{Direction, Position};
 
 #[derive(Clone, Copy, Debug)]
 enum Part {

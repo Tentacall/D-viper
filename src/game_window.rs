@@ -44,7 +44,13 @@ impl GameWindow {
         endwin();
     }
 
-    pub fn pause_menu(&mut self, height: i32, width: i32, title: String, is_gameover : bool) -> Action {
+    pub fn pause_menu(
+        &mut self,
+        height: i32,
+        width: i32,
+        title: String,
+        is_gameover: bool,
+    ) -> Action {
         let mut component: Component =
             Component::new(height, width, self.window_height, self.window_width);
 
@@ -68,9 +74,9 @@ impl GameWindow {
             napms(100);
             match getch() {
                 ERR => {}
-                27  => {
+                27 => {
                     component.del();
-                    return Action::QUIT
+                    return Action::QUIT;
                 }
                 x => match component.handle_input(x) {
                     Err(n) => return n,
@@ -98,9 +104,9 @@ impl GameWindow {
             napms(100);
             match getch() {
                 ERR => {}
-                27  => {
+                27 => {
                     component.del();
-                    return Action::QUIT
+                    return Action::QUIT;
                 }
                 x => match component.handle_input(x) {
                     Err(n) => return n,
@@ -110,8 +116,8 @@ impl GameWindow {
         }
     }
 
-    pub fn get_name(&mut self, height : i32, width: i32) -> String{
-        let title: String = String::from("You Name?"); 
+    pub fn get_name(&mut self, height: i32, width: i32) -> String {
+        let title: String = String::from("You Name?");
         let mut component: Component =
             Component::new(height, width, self.window_height, self.window_width);
 
@@ -124,8 +130,8 @@ impl GameWindow {
             component.display();
             component.refresh();
             napms(100);
-            match getch(){
-                ERR => {},
+            match getch() {
+                ERR => {}
                 10 | 27 => break,
                 c => {
                     if c == 263 && name.len() > 0 {
@@ -133,7 +139,7 @@ impl GameWindow {
                     }
                     else if ( c >= 48 && c <= 57) || ( c >= 65 && c <= 90 ) || ( c >= 97 && c <= 122 ){
                         let ch = char::from_u32(c as u32).unwrap();
-                        name = format!("{}{}",name, ch );
+                        name = format!("{}{}", name, ch);
                     }
                 }
             };
@@ -142,6 +148,4 @@ impl GameWindow {
         component.del();
         name
     }
-
 }
-

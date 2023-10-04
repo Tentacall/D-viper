@@ -1,41 +1,39 @@
-use ncurses::{wattroff, wattron, box_, delwin, mvwprintw, newwin, wrefresh, A_BOLD, COLOR_PAIR, KEY_ENTER, wclear };
 use crate::utils::Position;
+use ncurses::{
+    box_, delwin, mvwprintw, newwin, wattroff, wattron, wclear, wrefresh, A_BOLD, COLOR_PAIR,
+    KEY_ENTER,
+};
 
 #[derive(Clone, Copy)]
-pub enum Action{
+pub enum Action {
     QUIT,
     RESUME,
     RESTART,
-    START
+    START,
 }
 
-pub struct Choice
-{
+pub struct Choice {
     text: String,
     handler: Action,
 }
-
 
 pub struct Component {
     win: *mut i8,
     height: i32,
     width: i32,
-    cur_y : i32,
+    cur_y: i32,
     options: Vec<Choice>,
     option_len: usize,
     option_selected: usize,
     inputs: String,
     input_len: usize,
-    title :String,
-    title_pos: Position
+    title: String,
+    title_pos: Position,
 }
 
-impl Choice{
+impl Choice {
     pub fn new(text: String, handler: Action) -> Self {
-        Choice {
-            text: text,
-            handler: handler,
-        }
+        Choice { text, handler }
     }
 }
 
@@ -51,10 +49,10 @@ impl Component {
             options: Vec::new(),
             option_len: 0,
             option_selected: 0,
-            title : String::new(),
-            title_pos : Position::new(0, 0),
+            title: String::new(),
+            title_pos: Position::new(0, 0),
             input_len: 0,
-            inputs : String::new()
+            inputs: String::new(),
         }
     }
 
@@ -69,7 +67,7 @@ impl Component {
         self.title_pos.posy = 1;
     }
 
-    pub fn add_choice(&mut self, choice : Choice) {
+    pub fn add_choice(&mut self, choice: Choice) {
         self.options.push(choice);
         self.option_len += 1;
         if self.option_len as i32 == self.height {
@@ -82,15 +80,19 @@ impl Component {
 
     pub fn display(&mut self) {
         // displaying the title
-        wattron(self.win,COLOR_PAIR(1) | A_BOLD());
-        mvwprintw(self.win, self.title_pos.posy, self.title_pos.posx, self.title.as_str());
-        wattroff(self.win,COLOR_PAIR(1) | A_BOLD());
+        wattron(self.win, COLOR_PAIR(1) | A_BOLD());
+        mvwprintw(
+            self.win,
+            self.title_pos.posy,
+            self.title_pos.posx,
+            self.title.as_str(),
+        );
+        wattroff(self.win, COLOR_PAIR(1) | A_BOLD());
         self.cur_y = 2;
 
         //displaying inputs
         if self.input_len > 0 {
-            
-            let line = format!("+{}+", "-".repeat(self.width as usize - 4) );
+            let line = format!("+{}+", "-".repeat(self.width as usize - 4));
             mvwprintw(self.win, self.cur_y, 1, line.as_str());
             self.cur_y += 1;
             let p = (self.width - (self.inputs.len() as i32)) / 2;
@@ -101,17 +103,15 @@ impl Component {
             mvwprintw(self.win, self.cur_y, 1, line.as_str());
         }
 
-
         // displaying the options
-        if self.option_len > 0 { 
+        if self.option_len > 0 {
             for i in 0..self.option_len {
                 let p = (self.width - (self.options[i].text.len() as i32)) / 2;
                 if i == self.option_selected {
                     wattron(self.win, A_BOLD());
                     mvwprintw(self.win, self.cur_y, p, self.options[i].text.as_str());
                     wattroff(self.win, A_BOLD());
-                }
-                else{
+                } else {
                     mvwprintw(self.win, self.cur_y, p, self.options[i].text.as_str());
                 }
                 self.cur_y += 1;
@@ -122,16 +122,15 @@ impl Component {
     pub fn handle_input(&mut self, x: i32) -> Result<(), Action> {
         match x {
             115 | 258 => {
-                self.option_selected = ( self.option_selected + 1 ) % self.option_len;
-            },
+                self.option_selected = (self.option_selected + 1) % self.option_len;
+            }
             119 | 259 => {
                 if self.option_selected == 0 {
                     self.option_selected = self.option_len - 1;
+                } else {
+                    self.option_selected = (self.option_selected - 1) % self.option_len;
                 }
-                else {
-                    self.option_selected = ( self.option_selected - 1 ) % self.option_len;
-                }
-            },
+            }
             KEY_ENTER | 10 => {
                 match self.option_handler(self.options[self.option_selected].handler){
                     Err(n) => return Err(n),
@@ -153,12 +152,24 @@ impl Component {
         self.inputs = input;
     }
 
-    fn option_handler(&mut self, action : Action ) -> Result<(), Action> {
+    fn option_handler(&mut self, action: Action) -> Result<(), Action> {
         match action {
-            Action::QUIT => { self.del(); return Err(Action::QUIT) },
-            Action::RESTART => { self.del(); return Err(Action::RESTART) },
-            Action::RESUME => { self.del(); return Err(Action::RESUME) },
-            Action::START => { self.del(); return Err(Action::START )}
+            Action::QUIT => {
+                self.del();
+                Err(Action::QUIT)
+            }
+            Action::RESTART => {
+                self.del();
+                Err(Action::RESTART)
+            }
+            Action::RESUME => {
+                self.del();
+                Err(Action::RESUME)
+            }
+            Action::START => {
+                self.del();
+                Err(Action::START)
+            }
         }
     }
 
@@ -173,5 +184,4 @@ impl Component {
     pub fn clear(&self) {
         wclear(self.win);
     }
-
 }

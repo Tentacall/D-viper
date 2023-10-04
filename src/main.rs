@@ -1,6 +1,6 @@
 use ncurses::*;
 use viper::game::Game;
-use viper::game_window::{*};
+use viper::game_window::*;
 use viper::window_component::Action;
 
 fn main() {
@@ -11,13 +11,9 @@ fn main() {
             _ => {}
         }
         let name: String = window.get_name(6, 30);
-        let mut game: Game = Game::new(
-            name,
-            window.window_width,
-            window.window_height,
-        );
+        let mut game: Game = Game::new(name, window.window_width, window.window_height);
         'curr_game: loop {
-            let mut is_gameover : bool = false;
+            let mut is_gameover: bool = false;
             'game: loop {
                 clear();
                 game.display();
@@ -42,10 +38,11 @@ fn main() {
             match window.pause_menu(6, 30, msg, is_gameover) {
                 Action::QUIT => break 'new_game,
                 Action::RESTART => break 'curr_game,
-                Action::RESUME => {},
+                Action::RESUME => {}
                 _ => {}
             }
         }
     }
     window.exit();
 }
+
