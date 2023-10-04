@@ -1,8 +1,8 @@
+use ncurses::{attroff, attron, mvprintw, A_BOLD};
 use std::collections::HashSet;
 use std::collections::VecDeque;
-use ncurses::{mvprintw, attroff, attron, A_BOLD };
 
-use crate::utils::{Position, Direction};
+use crate::utils::{Direction, Position};
 
 #[derive(Clone, Copy, Debug)]
 enum Part {
@@ -20,6 +20,7 @@ pub struct SnakeBodyPart {
 pub struct Snake {
     pub snake: VecDeque<SnakeBodyPart>,
     pub direction: Direction,
+    pub speed: i32,
     texture: (String, String, String),
     snake_hash: HashSet<i32>,
 }
@@ -28,21 +29,19 @@ impl SnakeBodyPart {
     fn new(position: Position, part: Part) -> Self {
         SnakeBodyPart {
             pos: position,
-            part: part,
+            part,
         }
     }
 
-    fn display(&self, texture: (String, String, String)) -> () {
-        let ch: String;
-        match self.part {
-            Part::HEAD => ch = texture.0.clone(),
-            Part::BODY => ch = texture.1.clone(),
-            Part::TAIL => ch = texture.2.clone(),
-        }
+    fn display(&self, texture: (String, String, String)) {
+        let ch: String = match self.part {
+            Part::HEAD => texture.0.clone(),
+            Part::BODY => texture.1.clone(),
+            Part::TAIL => texture.2.clone(),
+        };
         mvprintw(self.pos.posy, self.pos.posx, ch.as_str());
     }
 }
-
 
 impl Snake {
     pub fn new(position: Position, texture: (String, String, String)) -> Self {
@@ -52,10 +51,11 @@ impl Snake {
         let hash_set: HashSet<i32> = HashSet::from([p1.pos.hash(), p2.pos.hash(), p3.pos.hash()]);
         let snake: VecDeque<SnakeBodyPart> = VecDeque::from([p1, p2, p3]);
         Snake {
-            snake: snake,
+            snake,
             direction: Direction::RIGHT,
-            texture: texture,
+            texture,
             snake_hash: hash_set,
+            speed: 1,
         }
     }
 
@@ -73,10 +73,11 @@ impl Snake {
             }
             self.snake.push_front(p);
         }
+
         Ok(())
     }
 
-    pub fn extend_back(&mut self) -> () {
+    pub fn extend_back(&mut self) {
         if let Some(curr_tail) = self.snake.back_mut() {
             curr_tail.part = Part::BODY;
             let p: SnakeBodyPart =
@@ -106,7 +107,7 @@ impl Snake {
         Ok(())
     }
 
-    pub fn display(&self) -> () {
+    pub fn display(&self) {
         attron(A_BOLD());
         for part in self.snake.iter() {
             part.display(self.texture.clone());

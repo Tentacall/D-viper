@@ -7,6 +7,12 @@ pub struct GameWindow {
     pub window_height: i32,
 }
 
+impl Default for GameWindow {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GameWindow {
     pub fn new() -> Self {
         initscr();
@@ -38,7 +44,13 @@ impl GameWindow {
         endwin();
     }
 
-    pub fn pause_menu(&mut self, height: i32, width: i32, title: String, is_gameover : bool) -> Action {
+    pub fn pause_menu(
+        &mut self,
+        height: i32,
+        width: i32,
+        title: String,
+        is_gameover: bool,
+    ) -> Action {
         let mut component: Component =
             Component::new(height, width, self.window_height, self.window_width);
 
@@ -62,14 +74,15 @@ impl GameWindow {
             napms(100);
             match getch() {
                 ERR => {}
-                27  => {
+                27 => {
                     component.del();
-                    return Action::QUIT
+                    return Action::QUIT;
                 }
-                x => match component.handle_input(x) {
-                    Err(n) => return n,
-                    _ => {}
-                },
+                x => {
+                    if let Err(n) = component.handle_input(x) {
+                        return n;
+                    }
+                }
             }
         }
     }
@@ -92,20 +105,21 @@ impl GameWindow {
             napms(100);
             match getch() {
                 ERR => {}
-                27  => {
+                27 => {
                     component.del();
-                    return Action::QUIT
+                    return Action::QUIT;
                 }
-                x => match component.handle_input(x) {
-                    Err(n) => return n,
-                    _ => {}
-                },
+                x => {
+                    if let Err(n) = component.handle_input(x) {
+                        return n;
+                    }
+                }
             }
         }
     }
 
-    pub fn get_name(&mut self, height : i32, width: i32) -> String{
-        let title: String = String::from("You Name?"); 
+    pub fn get_name(&mut self, height: i32, width: i32) -> String {
+        let title: String = String::from("You Name?");
         let mut component: Component =
             Component::new(height, width, self.window_height, self.window_width);
 
@@ -118,16 +132,18 @@ impl GameWindow {
             component.display();
             component.refresh();
             napms(100);
-            match getch(){
-                ERR => {},
+            match getch() {
+                ERR => {}
                 10 | 27 => break,
                 c => {
-                    if c == 263 && name.len() > 0 {
+                    if c == 263 && !name.is_empty() {
                         name.truncate(name.len() - 1);
-                    }
-                    else if ( c >= 48 && c <= 57) || ( c >= 65 && c <= 90 ) || ( c >= 97 && c <= 122 ){
+                    } else if (48..=57).contains(&c)
+                        || (65..=90).contains(&c)
+                        || (97..=122).contains(&c)
+                    {
                         let ch = char::from_u32(c as u32).unwrap();
-                        name = format!("{}{}",name, ch );
+                        name = format!("{}{}", name, ch);
                     }
                 }
             };
@@ -136,6 +152,4 @@ impl GameWindow {
         component.del();
         name
     }
-
 }
-
