@@ -1,7 +1,7 @@
-use ncurses::{mvprintw, attroff, attron, A_BOLD, COLOR_PAIR, addstr };
+use crate::snake::Snake;
+use crate::utils::{Direction, Position};
+use ncurses::{addstr, attroff, attron, mvprintw, A_BOLD, COLOR_PAIR};
 use rand::Rng;
-use crate::snake::{Snake};
-use crate::utils::{ Position, Direction };
 
 pub struct Game {
     username: String,
