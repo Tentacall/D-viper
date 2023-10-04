@@ -45,8 +45,8 @@ impl Component {
         let posx = (window_width - width) / 2;
         Component {
             win: newwin(height, width, posy, posx),
-            height: height,
-            width: width,
+            height,
+            width,
             cur_y: 1,
             options: Vec::new(),
             option_len: 0,

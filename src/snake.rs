@@ -28,7 +28,7 @@ impl SnakeBodyPart {
     fn new(position: Position, part: Part) -> Self {
         SnakeBodyPart {
             pos: position,
-            part: part,
+            part,
         }
     }
 
@@ -52,9 +52,9 @@ impl Snake {
         let hash_set: HashSet<i32> = HashSet::from([p1.pos.hash(), p2.pos.hash(), p3.pos.hash()]);
         let snake: VecDeque<SnakeBodyPart> = VecDeque::from([p1, p2, p3]);
         Snake {
-            snake: snake,
+            snake,
             direction: Direction::RIGHT,
-            texture: texture,
+            texture,
             snake_hash: hash_set,
         }
     }

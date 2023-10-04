@@ -19,7 +19,7 @@ struct Food {
 impl Food {
     fn new(value: i32) -> Self {
         Food {
-            value: value,
+            value,
             icon: "$".to_string(),
             pos: Position::new(12, 10),
         }
