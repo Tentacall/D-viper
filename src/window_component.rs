@@ -132,11 +132,8 @@ impl Component {
                 }
             }
             KEY_ENTER | 10 => {
-                match self.option_handler(self.options[self.option_selected].handler){
-                    Err(n) => return Err(n),
-                    _ => {}
-                };
-            },
+                self.option_handler(self.options[self.option_selected].handler)?;
+            }
             _ => {}
         }
         Ok(())

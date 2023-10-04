@@ -78,10 +78,11 @@ impl GameWindow {
                     component.del();
                     return Action::QUIT;
                 }
-                x => match component.handle_input(x) {
-                    Err(n) => return n,
-                    _ => {}
-                },
+                x => {
+                    if let Err(n) = component.handle_input(x) {
+                        return n;
+                    }
+                }
             }
         }
     }
@@ -108,10 +109,11 @@ impl GameWindow {
                     component.del();
                     return Action::QUIT;
                 }
-                x => match component.handle_input(x) {
-                    Err(n) => return n,
-                    _ => {}
-                },
+                x => {
+                    if let Err(n) = component.handle_input(x) {
+                        return n;
+                    }
+                }
             }
         }
     }
@@ -134,10 +136,12 @@ impl GameWindow {
                 ERR => {}
                 10 | 27 => break,
                 c => {
-                    if c == 263 && name.len() > 0 {
+                    if c == 263 && !name.is_empty() {
                         name.truncate(name.len() - 1);
-                    }
-                    else if ( c >= 48 && c <= 57) || ( c >= 65 && c <= 90 ) || ( c >= 97 && c <= 122 ){
+                    } else if (48..=57).contains(&c)
+                        || (65..=90).contains(&c)
+                        || (97..=122).contains(&c)
+                    {
                         let ch = char::from_u32(c as u32).unwrap();
                         name = format!("{}{}", name, ch);
                     }

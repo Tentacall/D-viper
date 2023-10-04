@@ -8,9 +8,8 @@ fn main() {
 
     let mut window = GameWindow::new();
     'new_game: loop {
-        match window.start_menu(6, 30 ){
-            Action::QUIT => break 'new_game,
-            _ => {}
+        if let Action::QUIT = window.start_menu(6, 30) {
+            break 'new_game;
         }
         let name: String = window.get_name(6, 30);
         let mut game: Game = Game::new(name, window.window_width, window.window_height);

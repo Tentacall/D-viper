@@ -33,17 +33,15 @@ impl SnakeBodyPart {
         }
     }
 
-        let ch: String;
-        match self.part {
-            Part::HEAD => ch = texture.0.clone(),
-            Part::BODY => ch = texture.1.clone(),
-            Part::TAIL => ch = texture.2.clone(),
-        }
     fn display(&self, texture: (String, String, String)) {
+        let ch: String = match self.part {
+            Part::HEAD => texture.0.clone(),
+            Part::BODY => texture.1.clone(),
+            Part::TAIL => texture.2.clone(),
+        };
         mvprintw(self.pos.posy, self.pos.posx, ch.as_str());
     }
 }
-
 
 impl Snake {
     pub fn new(position: Position, texture: (String, String, String)) -> Self {
@@ -75,6 +73,7 @@ impl Snake {
             }
             self.snake.push_front(p);
         }
+
         Ok(())
     }
 
