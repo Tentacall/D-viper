@@ -147,7 +147,7 @@ impl Component {
         self.input_len as i32
     }
 
-    pub fn update_input(&mut self, input: String, index: i32) -> () {
+    pub fn update_input(&mut self, input: String, index: i32) {
         let _ = index - 1;
         self.inputs = input;
     }

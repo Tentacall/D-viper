@@ -33,13 +33,13 @@ impl SnakeBodyPart {
         }
     }
 
-    fn display(&self, texture: (String, String, String)) -> () {
         let ch: String;
         match self.part {
             Part::HEAD => ch = texture.0.clone(),
             Part::BODY => ch = texture.1.clone(),
             Part::TAIL => ch = texture.2.clone(),
         }
+    fn display(&self, texture: (String, String, String)) {
         mvprintw(self.pos.posy, self.pos.posx, ch.as_str());
     }
 }
@@ -78,7 +78,7 @@ impl Snake {
         Ok(())
     }
 
-    pub fn extend_back(&mut self) -> () {
+    pub fn extend_back(&mut self) {
         if let Some(curr_tail) = self.snake.back_mut() {
             curr_tail.part = Part::BODY;
             let p: SnakeBodyPart =
@@ -108,7 +108,7 @@ impl Snake {
         Ok(())
     }
 
-    pub fn display(&self) -> () {
+    pub fn display(&self) {
         attron(A_BOLD());
         for part in self.snake.iter() {
             part.display(self.texture.clone());

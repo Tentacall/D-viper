@@ -25,13 +25,13 @@ impl Food {
         }
     }
 
-    fn display(&self) -> () {
+    fn display(&self) {
         attron(COLOR_PAIR(1) | A_BOLD());
         mvprintw(self.pos.posy, self.pos.posx, self.icon.as_str());
         attroff(COLOR_PAIR(1) | A_BOLD());
     }
 
-    fn relocate(&mut self, width: i32, height: i32) -> () {
+    fn relocate(&mut self, width: i32, height: i32) {
         let mut rng = rand::thread_rng();
         self.pos.posy = rng.gen_range(1..=height - 2);
         self.pos.posx = rng.gen_range(1..=width - 2);
@@ -53,7 +53,7 @@ impl Game {
         }
     }
 
-    pub fn update_score(&mut self, width: i32, height: i32) -> () {
+    pub fn update_score(&mut self, width: i32, height: i32) {
         if let Some(head) = self.snake.snake.front_mut() {
             if head.pos == self.food.pos {
                 self.score += self.food.value;
@@ -97,7 +97,7 @@ impl Game {
         }
     }
 
-    pub fn display(&mut self) -> () {
+    pub fn display(&mut self) {
         let data = format!("USER : {} | SCORE : {}", self.username, self.score);
         addstr(&data);
         self.snake.display();
