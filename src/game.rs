@@ -33,8 +33,8 @@ impl Food {
 
     fn relocate(&mut self, width: i32, height: i32) -> () {
         let mut rng = rand::thread_rng();
-        self.pos.posy = rng.gen_range(1..=height-2);
-        self.pos.posx = rng.gen_range(1..=width-2);
+        self.pos.posy = rng.gen_range(1..=height - 2);
+        self.pos.posx = rng.gen_range(1..=width - 2);
     }
 }
 
