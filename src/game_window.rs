@@ -7,6 +7,12 @@ pub struct GameWindow {
     pub window_height: i32,
 }
 
+impl Default for GameWindow {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GameWindow {
     pub fn new() -> Self {
         initscr();
