@@ -4,6 +4,8 @@ use viper::game_window::*;
 use viper::window_component::Action;
 
 fn main() {
+    timeout(0);
+
     let mut window = GameWindow::new();
     'new_game: loop {
         match window.start_menu(6, 30 ){
@@ -27,12 +29,15 @@ fn main() {
                         break 'game;
                     }
                 };
-                napms(100);
                 match getch() {
-                    ERR => {}
+                    ERR => {
+                        game.snake.speed = 1;
+                    }
                     27 => break 'game,
                     n => game.control_snake(n),
                 }
+                let speed = 100 / game.snake.speed;
+                napms(speed);
             }
             let msg: String = format!("Score : {}", game.score);
             match window.pause_menu(6, 30, msg, is_gameover) {

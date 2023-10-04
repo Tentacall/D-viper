@@ -67,19 +67,31 @@ impl Game {
         match ch {
             119 | 259 => match self.snake.direction {
                 Direction::BOTTOM => {}
-                _ => self.snake.direction = Direction::TOP,
+                _ => {
+                    self.snake.direction = Direction::TOP;
+                    self.snake.speed = 4;
+                }
             }, // w
             97 | 260 => match self.snake.direction {
                 Direction::RIGHT => {}
-                _ => self.snake.direction = Direction::LEFT,
+                _ => {
+                    self.snake.direction = Direction::LEFT;
+                    self.snake.speed = 4;
+                }
             }, // A
             115 | 258 => match self.snake.direction {
                 Direction::TOP => {}
-                _ => self.snake.direction = Direction::BOTTOM,
+                _ => {
+                    self.snake.direction = Direction::BOTTOM;
+                    self.snake.speed = 4;
+                }
             }, //s
             100 | 261 => match self.snake.direction {
                 Direction::LEFT => {}
-                _ => self.snake.direction = Direction::RIGHT,
+                _ => {
+                    self.snake.direction = Direction::RIGHT;
+                    self.snake.speed = 4;
+                }
             }, // D
             _ => {}
         }

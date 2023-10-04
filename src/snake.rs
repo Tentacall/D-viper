@@ -20,6 +20,7 @@ pub struct SnakeBodyPart {
 pub struct Snake {
     pub snake: VecDeque<SnakeBodyPart>,
     pub direction: Direction,
+    pub speed: i32,
     texture: (String, String, String),
     snake_hash: HashSet<i32>,
 }
@@ -56,6 +57,7 @@ impl Snake {
             direction: Direction::RIGHT,
             texture,
             snake_hash: hash_set,
+            speed: 1,
         }
     }
 
